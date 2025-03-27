@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PeopleList from "./person/PeopleList"; // Importing People List component
 import AddPerson from "./person/AddPerson";
 import Navbar from "./components/NavBar";
-import AddCemetery from "./cemetery/addCemetery";  //bricen comment 
+import AddCemetery from "./cemetery/addCemetery";  //bricen comment hopefully
 import CemeteryList from "./cemetery/CemeteryList";  // Import Add Person component
 
 function App() {
