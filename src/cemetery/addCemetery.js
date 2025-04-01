@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import supabaseClient from "../helper/supabaseClient";
 
 function AddCemetery() {
@@ -10,29 +9,30 @@ function AddCemetery() {
     const [capacity, setCapacity] = useState(0); // Initialize capacity as an integer
     const [email, setEmail] = useState("");
 
-    const navigate = useNavigate(); // Navigate back after adding
 
     async function addCemetery() {
         if (!name.trim()) {
-            // If the name is empty, prevent submitting
             alert("Name is required");
             return;
         }
 
-        // Insert the data into the Supabase database
-        const { error } = await supabaseClient.from("cemetery").insert([{
-            name, description, address, phone_number, capacity, email
-        }]);
+        const { data, error } = await supabaseClient
+            .from("cemetery")
+            .insert([{ name, description, address, phone_number, capacity, email }])
+            .select();
 
         if (error) {
             console.error("Error inserting cemetery:", error);
-        } else {
-            // Reset fields after successful insert
-            setName(""); setDescription(""); setAddress(""); setPhoneNumber("");
-            setCapacity(0); setEmail("");
+            alert("Failed to add cemetery.");
+            return;
+        }
 
+        if (data) {
+            console.log("Inserted cemetery:", data);
+            alert("Cemetery added successfully!");
         }
     }
+
 
     return (
         <div>

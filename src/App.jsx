@@ -4,7 +4,8 @@ import PeopleList from "./person/PeopleList"; // Importing People List component
 import AddPerson from "./person/AddPerson";
 import Navbar from "./components/NavBar";
 import AddCemetery from "./cemetery/addCemetery";
-import CemeteryList from "./cemetery/CemeteryList";  // Import Add Person component
+import CemeteryList from "./cemetery/CemeteryList";
+import HomePage from "./HomePage";  // Import Add Person component
 
 function App() {
     return (
@@ -15,7 +16,8 @@ function App() {
                     <Routes>
                         <Route path="/add-person" element={<AddPerson />} />
                         <Route path="/add-cemetery" element={<AddCemetery />} />
-                        <Route path="/" element={<PeopleList />} />  {/* People List route */}
+                        <Route path="/" element={<HomePage />} />  {/* Home Page route */}
+                        <Route path="/people-list" element={<PeopleList />} />  {/* People List route */}
                         <Route path="/cemetery-list" element={<CemeteryList />} />  {/* Separate route for Cemetery List */}
                     </Routes>
                 </div>
