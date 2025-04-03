@@ -8,9 +8,9 @@ function Navbar() {
             <div style={styles.links}>
                 <Link to="/add-person" style={styles.link}>Add Person</Link>
                 <Link to="/add-cemetery" style={styles.link}>Add Cemetery</Link>
-                <Link to="/" style={styles.link}>Person List</Link>
+                <Link to="/people-list" style={styles.link}>Person List</Link>
                 <Link to="/cemetery-list" style={styles.link}>Cemetery List</Link>
-
+                <Link to="/map" style={styles.link}>Map</Link>
             </div>
         </nav>
     );
