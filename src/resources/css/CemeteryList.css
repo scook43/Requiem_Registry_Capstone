@@ -1,0 +1,109 @@
+/* Container styling */
+.cemetery-list-container {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title Styling */
+.cemetery-list-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Table styling */
+.cemetery-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.cemetery-table th, .cemetery-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Header Styling */
+.cemetery-table th {
+    background-color: #343a40;
+    color: white;
+}
+
+/* Alternating row colors */
+.cemetery-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Input fields inside edit mode */
+.cemetery-table input,
+.cemetery-table textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Button styles */
+.cemetery-table button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Edit button */
+.cemetery-table .edit-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+.cemetery-table .edit-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Delete button */
+.cemetery-table .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cemetery-table .delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Save button */
+.cemetery-table .save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.cemetery-table .save-btn:hover {
+    background-color: #218838;
+}
+
+/* Cancel button */
+.cemetery-table .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cemetery-table .cancel-btn:hover {
+    background-color: #5a6268;
+}
+.cemetery-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.cemetery-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

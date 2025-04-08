@@ -1,0 +1,39 @@
+.person-detail-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.person-detail-btn.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+.person-detail-btn.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.person-detail-btn.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+.person-detail-btn.save-btn:hover {
+    background-color: #218838;
+}
+
+.person-detail-btn.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+.person-detail-btn.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+.person-detail-btn.edit-btn {
+    background-color: #ffc107;
+    color: black;
+}
+.person-detail-btn.edit-btn:hover {
+    background-color: #e0a800;
+}

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import supabaseClient from "../helper/supabaseClient";
+import "../resources/css/formStyles.css";
+
 
 function AddCemetery() {
     const [name, setName] = useState("");
@@ -35,7 +37,7 @@ function AddCemetery() {
 
 
     return (
-        <div>
+        <div className="add-cemetery-container">
             <h1>Add Cemetery</h1>
             <input
                 value={name}

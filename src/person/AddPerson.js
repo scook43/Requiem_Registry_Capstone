@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import supabaseClient from "../helper/supabaseClient";
+import "../resources/css/formStyles.css";
 
 function AddPerson() {
     const [f_name, setFName] = useState("");
@@ -11,7 +11,6 @@ function AddPerson() {
     const [death_date, setDeathDate] = useState("");
     const [biography, setBiography] = useState("");
 
-    const navigate = useNavigate(); // Navigate back after adding
 
     async function addPerson() {
         if (!f_name.trim()) return;
@@ -30,7 +29,7 @@ function AddPerson() {
     }
 
     return (
-        <div>
+        <div className="add-person-container">
             <h1>Add Person</h1>
             <input value={f_name} onChange={(e) => setFName(e.target.value)} placeholder="First Name" />
             <input value={m_name} onChange={(e) => setMName(e.target.value)} placeholder="Middle Name" />

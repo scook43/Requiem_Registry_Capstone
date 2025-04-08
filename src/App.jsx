@@ -5,7 +5,10 @@ import AddPerson from "./person/AddPerson";
 import Navbar from "./components/NavBar";
 import AddCemetery from "./cemetery/addCemetery";
 import CemeteryList from "./cemetery/CemeteryList";
-import HomePage from "./HomePage";  // Import Add Person component
+import HomePage from "./HomePage";
+import PlotList from "./plot/PlotList";
+import CemeteryDetail from "./cemetery/CemeteryDetails";
+import PersonDetail from "./person/PersonDetails";  // Import Add Person component
 
 function App() {
     return (
@@ -19,6 +22,10 @@ function App() {
                         <Route path="/" element={<HomePage />} />  {/* Home Page route */}
                         <Route path="/people-list" element={<PeopleList />} />  {/* People List route */}
                         <Route path="/cemetery-list" element={<CemeteryList />} />  {/* Separate route for Cemetery List */}
+                        <Route path="/plot-list" element={<PlotList />} />  {/* Separate route for Cemetery List */}
+                        <Route path="/person/:id" element={<PersonDetail />} />
+                        <Route path="/cemetery/:id" element={<CemeteryDetail />} />
+
                     </Routes>
                 </div>
             </div>
