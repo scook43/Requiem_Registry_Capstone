@@ -67,10 +67,9 @@ function PersonDetail() {
 
     return (
         <div style={styles.container}>
-            <button onClick={() => navigate("/people-list")} className="person-detail-btn cancel-btn">
-                ← Back to List
+            <button onClick={() => navigate(-1)} style={styles.backButton}>
+                ← Back
             </button>
-
 
             {isEditing ? (
                 <div style={styles.form}>
