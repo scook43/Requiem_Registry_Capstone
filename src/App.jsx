@@ -6,6 +6,7 @@ import Navbar from "./components/NavBar";
 import AddCemetery from "./cemetery/addCemetery";
 import CemeteryList from "./cemetery/CemeteryList";
 import HomePage from "./HomePage";  // Import Add Person component
+import Map from "./map/Map";
 
 function App() {
     return (

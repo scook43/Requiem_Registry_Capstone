@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './Map.css';
 
 export default function Map() {
+
+
+  
   const initialPlotLists = {
     Cemetery1: [
       { id: 1, name: '', x: 125, y: 120 },
