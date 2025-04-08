@@ -71,6 +71,7 @@ function PersonDetail() {
                 ← Back
             </button>
 
+
             {isEditing ? (
                 <div style={styles.form}>
                     <input

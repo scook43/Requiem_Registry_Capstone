@@ -24,6 +24,10 @@ function Navbar() {
                 {/* Add Cemetery Link */}
                 <Link to="/add-cemetery" style={styles.link}>Add Cemetery</Link>
 
+                {/* Map Link */}
+                <Link to="/map" style={styles.link}>Map</Link>
+
+
                 {/* Lists Main Menu with Arrow */}
                 <div>
                     <div
