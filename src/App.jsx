@@ -7,7 +7,6 @@ import AddCemetery from "./cemetery/addCemetery";
 import CemeteryList from "./cemetery/CemeteryList";
 import HomePage from "./HomePage";  // Import Add Person component
 import Map from "./map/Map";
-import HomePage from "./HomePage";
 import PlotList from "./plot/PlotList";
 import CemeteryDetail from "./cemetery/CemeteryDetails";
 import PersonDetail from "./person/PersonDetails";  // Import Add Person component
