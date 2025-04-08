@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from '../public/resources/pngs/logo.png'; // Adjust the path based on your structure
+import logo from '../resources/pngs/logoCircle.png'; // Adjust the path based on your structure
 
 function Navbar() {
     // State to toggle the visibility of the submenu
@@ -46,6 +46,8 @@ function Navbar() {
                         <div style={styles.submenu}>
                             <Link to="/people-list" style={styles.submenuLink}>Person List</Link>
                             <Link to="/cemetery-list" style={styles.submenuLink}>Cemetery List</Link>
+                            <Link to="/plot-list" style={styles.submenuLink}>Plot List</Link>
+
                         </div>
                     )}
                 </div>

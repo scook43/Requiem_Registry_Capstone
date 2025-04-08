@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import supabaseClient from "../helper/supabaseClient";
-import CemeteryRow from "./CemeteryRow"; // Import the row component
+import "../resources/css/CemeteryList.css";
 
 function CemeteryList() {
     const [cemetery, setCemetery] = useState([]);
-    const [editingId, setEditingId] = useState(null);
-    const [editData, setEditData] = useState({});
 
     useEffect(() => {
         fetchCemetery();
     }, []);
 
     async function fetchCemetery() {
-        const { data, error } = await supabaseClient.from("cemetery").select("*").order("created_at", { ascending: true });
+        const { data, error } = await supabaseClient
+            .from("cemetery")
+            .select("*")
+            .order("created_at", { ascending: true });
 
         if (error) {
             console.error("Error fetching cemetery:", error);
@@ -21,52 +23,28 @@ function CemeteryList() {
         }
     }
 
-    async function updateCemetery(id) {
-        const { error } = await supabaseClient.from("cemetery").update(editData).eq("id", id);
-        if (error) {
-            console.error("Error updating cemetery:", error);
-        } else {
-            setEditingId(null);
-            await fetchCemetery();
-        }
-    }
-
-    async function deleteCemetery(id) {
-        const { error } = await supabaseClient.from("cemetery").delete().eq("id", id);
-        if (error) {
-            console.error("Error deleting person:", error);
-        } else {
-            await fetchCemetery();
-        }
-    }
-
     return (
-        <div>
+        <div className="cemetery-list-container">
             <h1>Cemetery List</h1>
-            <table border="1">
+            <table className="cemetery-table">
                 <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Description</th>
                     <th>Address</th>
-                    <th>Phone Number</th>
-                    <th>Capacity</th>
                     <th>Email</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {cemetery.map((cemetery) => (
-                    <CemeteryRow
-                        key={cemetery.id}
-                        cemetery={cemetery}
-                        editingId={editingId}
-                        editData={editData}
-                        setEditingId={setEditingId}
-                        setEditData={setEditData}
-                        updateCemetery={updateCemetery}
-                        deleteCemetery={deleteCemetery}
-                    />
+                {cemetery.map((cem) => (
+                    <tr key={cem.id}>
+                        <td>
+                            <Link to={`/cemetery/${cem.id}`} className="cemetery-link">
+                                {cem.name}
+                            </Link>
+                        </td>
+                        <td>{cem.address || "N/A"}</td>
+                        <td>{cem.email || "N/A"}</td>
+                    </tr>
                 ))}
                 </tbody>
             </table>

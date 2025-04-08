@@ -1,0 +1,72 @@
+/* General styling for the form containers */
+.add-cemetery-container,
+.add-person-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #e0e0e0; /* Lighter gray for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title Styling */
+.add-cemetery-container h1,
+.add-person-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+.add-cemetery-container form,
+.add-person-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Input and textarea styling */
+.add-cemetery-container input,
+.add-cemetery-container textarea,
+.add-person-container input,
+.add-person-container textarea {
+    width: 90%; /* Keeps fields from stretching too far */
+    max-width: 400px; /* Prevents fields from being too wide */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 16px;
+    background: #f0f0f0;
+}
+
+/* Textarea adjustments */
+.add-cemetery-container textarea,
+.add-person-container textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+/* Button styling */
+.add-cemetery-container button,
+.add-person-container button {
+    width: 90%;
+    max-width: 400px;
+    padding: 12px;
+    background-color: #555; /* Neutral gray */
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-cemetery-container button:hover,
+.add-person-container button:hover {
+    background-color: #444; /* Darker gray for hover */
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import supabaseClient from "../helper/supabaseClient";
-import PersonRow from "./PersonRow"; // Import the row component
+import PersonRow from "./PersonRow";
+import "../resources/css/PeopleList.css";
 
 function PeopleList() {
     const [people, setPeople] = useState([]);
@@ -41,19 +42,15 @@ function PeopleList() {
     }
 
     return (
-        <div>
+        <div className="people-list-container">
             <h1>People List</h1>
-            <table border="1">
+            <table className="people-table">
                 <thead>
                 <tr>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Last Name</th>
+                    <th>Name</th>
                     <th>Suffix</th>
                     <th>Birth Date</th>
                     <th>Death Date</th>
-                    <th>Biography</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
