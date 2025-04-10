@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from '../resources/pngs/logoCircle.png'; // Adjust the path based on your structure
+import logo from '../resources/pngs/logoCircle.png';
 
-function Navbar() {
-    // State to toggle the visibility of the submenu
+function Navbar({ isLoggedIn }) {
     const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
     const toggleSubMenu = () => {
@@ -17,72 +16,61 @@ function Navbar() {
                 <img src={logo} alt="Logo" style={styles.logo} />
             </Link>
 
-            <div style={styles.links}>
-                {/* Add Person Link */}
-                <Link to="/add-person" style={styles.link}>Add Person</Link>
+            {isLoggedIn && (
+                <div style={styles.links}>
+                    <Link to="/add-person" style={styles.link}>Add Person</Link>
+                    <Link to="/add-cemetery" style={styles.link}>Add Cemetery</Link>
+                    <Link to="/map" style={styles.link}>Map</Link>
 
-                {/* Add Cemetery Link */}
-                <Link to="/add-cemetery" style={styles.link}>Add Cemetery</Link>
-
-                {/* Map Link */}
-                <Link to="/map" style={styles.link}>Map</Link>
-
-
-                {/* Lists Main Menu with Arrow */}
-                <div>
-                    <div
-                        style={styles.link}
-                        onClick={toggleSubMenu}
-                    >
-                        Lists
-                        {/* Down Arrow */}
-                        <span style={styles.arrow}>
-                            {isSubMenuOpen ? '▲' : '▼'} {/* Toggle between down and up arrow */}
-                        </span>
-                    </div>
-
-                    {/* Submenu */}
-                    {isSubMenuOpen && (
-                        <div style={styles.submenu}>
-                            <Link to="/people-list" style={styles.submenuLink}>Person List</Link>
-                            <Link to="/cemetery-list" style={styles.submenuLink}>Cemetery List</Link>
-                            <Link to="/plot-list" style={styles.submenuLink}>Plot List</Link>
-
+                    <div>
+                        <div style={styles.link} onClick={toggleSubMenu}>
+                            Lists
+                            <span style={styles.arrow}>
+                                {isSubMenuOpen ? '▲' : '▼'}
+                            </span>
                         </div>
-                    )}
+
+                        {isSubMenuOpen && (
+                            <div style={styles.submenu}>
+                                <Link to="/people-list" style={styles.submenuLink}>Person List</Link>
+                                <Link to="/cemetery-list" style={styles.submenuLink}>Cemetery List</Link>
+                                <Link to="/plot-list" style={styles.submenuLink}>Plot List</Link>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </nav>
     );
 }
 
 const styles = {
     navbar: {
-        position: "fixed",  // Keeps it fixed to the left
+        position: "fixed",
         top: "0",
         left: "0",
-        width: "150px",  // Adjust width as needed
-        height: "100vh", // Full height
+        width: "150px",
+        height: "100vh",
         backgroundColor: "#333",
         color: "white",
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",  // Align the items on the left
+        alignItems: "flex-start",
         paddingTop: "20px",
         paddingLeft: "10px",
     },
     logoLink: {
-        marginBottom: "20px",  // Space between logo and other links
+        marginBottom: "20px",
         textAlign: "center",
     },
     logo: {
-        width: "100px",  // Adjust size as needed
+        width: "100px",
         height: "auto",
-        cursor: "pointer",  // Makes the logo clickable
+        cursor: "pointer",
     },
     links: {
         display: "flex",
-        flexDirection: "column",  // Stack links vertically
+        flexDirection: "column",
         gap: "15px",
     },
     link: {
@@ -97,11 +85,11 @@ const styles = {
         cursor: "pointer",
     },
     submenu: {
-        marginLeft: "20px",  // Indentation for the submenu
+        marginLeft: "20px",
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        marginTop: "10px",  // Space between main and submenu
+        marginTop: "10px",
     },
     submenuLink: {
         color: "white",
@@ -114,8 +102,8 @@ const styles = {
         transition: "background-color 0.3s",
     },
     arrow: {
-        marginLeft: "8px",  // Space between the text and arrow
-        fontSize: "16px",   // Size of the arrow
+        marginLeft: "8px",
+        fontSize: "16px",
     },
 };
 

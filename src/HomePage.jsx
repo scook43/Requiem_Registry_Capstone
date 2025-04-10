@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import supabaseClient from "./helper/supabaseClient.js";
 import PersonCard from "./person/PersonCard";
-
 import logoResized from "./resources/pngs/logoCircle.png";
 
 function HomePage() {
     const [cemeteries, setCemeteries] = useState([]);
-    const [selectedCemetery, setSelectedCemetery] = useState("");
+    const [selectedCemetery, setSelectedCemetery] = useState("ALL");
     const [cemeteryDetails, setCemeteryDetails] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
@@ -24,7 +23,7 @@ function HomePage() {
 
     useEffect(() => {
         const fetchCemeteryDetails = async () => {
-            if (selectedCemetery) {
+            if (selectedCemetery && selectedCemetery !== "ALL") {
                 const { data, error } = await supabaseClient
                     .from("cemetery")
                     .select("*")
@@ -32,7 +31,9 @@ function HomePage() {
                     .single();
                 if (error) console.error("Error fetching cemetery details:", error);
                 else setCemeteryDetails(data);
-            } else setCemeteryDetails(null);
+            } else {
+                setCemeteryDetails(null);
+            }
         };
         fetchCemeteryDetails();
     }, [selectedCemetery]);
@@ -42,13 +43,48 @@ function HomePage() {
             setSearchResults([]);
             return;
         }
-        const { data, error } = await supabaseClient
-            .from("person")
-            .select("*")
-            .or(`f_name.ilike.%${searchQuery}%,m_name.ilike.%${searchQuery}%,l_name.ilike.%${searchQuery}%`);
-        if (error) console.error("Error fetching people:", error);
-        else setSearchResults(data);
-    }, [searchQuery]);
+
+        let query = supabaseClient
+            .from("rr_plot")
+            .select(`
+                tenant_id,
+                ceme_id,
+                person:tenant_id (
+                    id,
+                    f_name,
+                    m_name,
+                    l_name,
+                    suffix,
+                    birth_date,
+                    death_date,
+                    biography
+                )
+            `);
+
+        if (selectedCemetery !== "ALL") {
+            query = query.eq("ceme_id", selectedCemetery);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+            console.error("Error fetching assigned people:", error);
+            return;
+        }
+
+        const people = data
+            .map((row) => row.person)
+            .filter((person) => person !== null)
+            .filter((person, index, self) =>
+                index === self.findIndex(p => p.id === person.id)
+            )
+            .filter((person) => {
+                const fullName = `${person.f_name} ${person.m_name || ""} ${person.l_name}`.toLowerCase();
+                return fullName.includes(searchQuery.toLowerCase());
+            });
+
+        setSearchResults(people);
+    }, [searchQuery, selectedCemetery]);
 
     useEffect(() => {
         fetchPeople();
@@ -70,7 +106,7 @@ function HomePage() {
                         onChange={(e) => setSelectedCemetery(e.target.value)}
                         style={styles.dropdown}
                     >
-                        <option value="">Select a cemetery</option>
+                        <option value="ALL">All Cemeteries</option>
                         {cemeteries.map((cemetery) => (
                             <option key={cemetery.id} value={cemetery.id}>
                                 {cemetery.name}
