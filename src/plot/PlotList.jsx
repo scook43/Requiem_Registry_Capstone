@@ -8,93 +8,111 @@ function PlotsList() {
     const [cemeteries, setCemeteries] = useState([]);
     const [selectedCemeteryId, setSelectedCemeteryId] = useState("");
     const [selectedCemeteryName, setSelectedCemeteryName] = useState("");
+    const [peopleOptions, setPeopleOptions] = useState([]);
 
     useEffect(() => {
         fetchCemeteries();
+        fetchPeople();
     }, []);
 
     useEffect(() => {
-        const fetchPlots = async () => {
-            let query = supabaseClient
-                .from("rr_plot")
-                .select("*")
-                .order("plot_id", { ascending: true });
-
-            if (selectedCemeteryId) {
-                query = query.eq("ceme_id", selectedCemeteryId);
-            }
-
-            const { data, error } = await query;
-            if (error) {
-                console.error("Error fetching plots:", error);
-            } else {
-                setPlots(data || []);
-            }
-        };
-
-        fetchPlots();
+        if (selectedCemeteryId) fetchPlots();
     }, [selectedCemeteryId]);
 
-    async function fetchCemeteries() {
+    const fetchCemeteries = async () => {
         const { data, error } = await supabaseClient.from("cemetery").select("id, name");
-        if (error) {
-            console.error("Error fetching cemeteries:", error);
-        } else {
-            setCemeteries(data);
-        }
-    }
+        if (error) console.error("Error fetching cemeteries:", error);
+        else setCemeteries(data);
+    };
 
-    async function deletePlot(id) {
+    const fetchPeople = async () => {
+        const { data, error } = await supabaseClient
+            .from("person")
+            .select("id, f_name, m_name, l_name, suffix");
+
+        if (error) {
+            console.error("Error fetching people:", error);
+        } else {
+            const options = data.map((person) => {
+                const fullName = [
+                    person.f_name,
+                    person.m_name,
+                    person.l_name,
+                    person.suffix ? `(${person.suffix})` : ""
+                ].filter(Boolean).join(" ");
+                return { value: person.id, label: fullName };
+            });
+            setPeopleOptions(options);
+        }
+    };
+
+    const fetchPlots = async () => {
+        const { data, error } = await supabaseClient
+            .from("rr_plot")
+            .select(`
+                plot_id,
+                ceme_id,
+                coord_lat,
+                coord_long,
+                tenant_id,
+                plot_number,
+                person:tenant_id (
+                    f_name,
+                    m_name,
+                    l_name,
+                    suffix
+                )
+            `)
+            .eq("ceme_id", selectedCemeteryId)
+            .order("plot_id", { ascending: true });
+
+        if (error) {
+            console.error("Error fetching plots:", error);
+        } else {
+            setPlots(data || []);
+        }
+    };
+
+    const deletePlot = async (id) => {
         const { error } = await supabaseClient.from("rr_plot").delete().eq("plot_id", id);
         if (error) {
             console.error("Error deleting plot:", error);
         } else {
-            // Re-fetch plots after delete
-            const fetchPlots = async () => {
-                let query = supabaseClient
-                    .from("rr_plot")
-                    .select("*")
-                    .order("plot_id", { ascending: true });
-
-                if (selectedCemeteryId) {
-                    query = query.eq("ceme_id", selectedCemeteryId);
-                }
-
-                const { data, error } = await query;
-                if (error) {
-                    console.error("Error fetching plots:", error);
-                } else {
-                    setPlots(data || []);
-                }
-            };
-            await fetchPlots();
+            fetchPlots();
         }
-    }
+    };
 
+    const handleAssignTenant = async (plotId, personId) => {
+        const { error } = await supabaseClient
+            .from("rr_plot")
+            .update({ tenant_id: personId })
+            .eq("plot_id", plotId);
+
+        if (error) {
+            console.error("Error assigning tenant:", error);
+            alert("Failed to assign person.");
+        } else {
+            fetchPlots();
+        }
+    };
 
     const handleCemeteryChange = (e) => {
         const selectedId = e.target.value;
         setSelectedCemeteryId(selectedId);
-
         const selected = cemeteries.find(c => c.id.toString() === selectedId);
         setSelectedCemeteryName(selected ? selected.name : "");
     };
 
-
     return (
         <div className="plots-list-container">
-            {/* Header Bar */}
-            <header
-                className="header"
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "10px 20px",
-                    backgroundColor: "#333",
-                    color: "white",
-                }}
-            >
+            <header className="header" style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px 20px",
+                backgroundColor: "#333",
+                color: "white",
+            }}>
                 <div className="header-left">
                     <h1 className="website-name">
                         {selectedCemeteryName || "Requiem Registry"}
@@ -129,7 +147,7 @@ function PlotsList() {
                         <th>Cemetery ID</th>
                         <th>Latitude</th>
                         <th>Longitude</th>
-                        <th>Tenant ID</th>
+                        <th>Tenant Name</th>
                         <th>Plot Number</th>
                         <th>Actions</th>
                     </tr>
@@ -140,6 +158,8 @@ function PlotsList() {
                             key={plot.plot_id}
                             plot={plot}
                             deletePlot={deletePlot}
+                            peopleOptions={peopleOptions}
+                            onAssign={handleAssignTenant}
                         />
                     ))}
                     </tbody>

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PeopleList from "./person/PeopleList"; // Importing People List component
+import PeopleList from "./person/PeopleList";
 import AddPerson from "./person/AddPerson";
 import Navbar from "./components/NavBar";
 import AddCemetery from "./cemetery/addCemetery";
@@ -9,25 +9,34 @@ import HomePage from "./HomePage";  // Import Add Person component
 import Map from "./map/Map";
 import PlotList from "./plot/PlotList";
 import CemeteryDetail from "./cemetery/CemeteryDetails";
-import PersonDetail from "./person/PersonDetails";  // Import Add Person component
+import Map from "./map/Map";
+import PersonDetail from "./person/PersonDetails";
 
 function App() {
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false to test public view
+
     return (
         <Router>
             <div style={styles.container}>
-                <Navbar /> {/* Navbar stays on the left */}
+                <Navbar isLoggedIn={isLoggedIn} />
                 <div style={styles.content}>
                     <Routes>
-                        <Route path="/add-person" element={<AddPerson />} />
-                        <Route path="/add-cemetery" element={<AddCemetery />} />
-                        <Route path="/" element={<HomePage />} />  {/* Home Page route */}
-                        <Route path="/people-list" element={<PeopleList />} />  {/* People List route */}
-                        <Route path="/cemetery-list" element={<CemeteryList />} />  {/* Separate route for Cemetery List */}
-                        <Route path="/map" element={<Map />} />
-                        <Route path="/plot-list" element={<PlotList />} />  {/* Separate route for Cemetery List */}
+                        {/* Public routes */}
+                        <Route path="/" element={<HomePage />} />
                         <Route path="/person/:id" element={<PersonDetail />} />
-                        <Route path="/cemetery/:id" element={<CemeteryDetail />} />
 
+                        {/* Protected admin routes */}
+                        {isLoggedIn && (
+                            <>
+                                <Route path="/add-person" element={<AddPerson />} />
+                                <Route path="/add-cemetery" element={<AddCemetery />} />
+                                <Route path="/people-list" element={<PeopleList />} />
+                                <Route path="/cemetery-list" element={<CemeteryList />} />
+                                <Route path="/map" element={<Map />} />
+                                <Route path="/plot-list" element={<PlotList />} />
+                                <Route path="/cemetery/:id" element={<CemeteryDetail />} />
+                            </>
+                        )}
                     </Routes>
                 </div>
             </div>
@@ -40,7 +49,7 @@ const styles = {
         display: "flex",
     },
     content: {
-        marginLeft: "200px", // Offset the content by the width of the navbar
+        marginLeft: "200px",
         padding: "20px",
         flexGrow: 1,
     },

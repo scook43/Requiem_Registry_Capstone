@@ -13,10 +13,11 @@ export default function Map() {
   const [addingPlot, setAddingPlot] = useState(false);
   const [peopleOptions, setPeopleOptions] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [plotAssignments, setPlotAssignments] = useState({}); // New
+  const [plotAssignments, setPlotAssignments] = useState({});
   const [selectedCemetery, setSelectedCemetery] = useState("");
   const [selectedCemeteryName, setSelectedCemeteryName] = useState("Requiem Registry");
 
+  // Fetch cemeteries
   useEffect(() => {
     const fetchCemeteries = async () => {
       const { data, error } = await supabaseClient
@@ -28,6 +29,7 @@ export default function Map() {
     fetchCemeteries();
   }, []);
 
+  // Fetch cemetery details
   useEffect(() => {
     const fetchCemeteryDetails = async () => {
       if (selectedCemetery) {
@@ -45,67 +47,7 @@ export default function Map() {
     fetchCemeteryDetails();
   }, [selectedCemetery]);
 
-
-  useEffect(() => {
-    const fetchPlots = async () => {
-      if (!selectedCemetery) {
-        setPlotLists((prev) => ({ ...prev, [selectedCemetery]: [] }));
-        return;
-      }
-  
-      const { data, error } = await supabaseClient
-        .from("rr_plot")
-        .select("plot_number, coord_lat, coord_long, tenant_id")
-        .eq("ceme_id", selectedCemetery);
-  
-      if (error) {
-        console.error("Error fetching plots:", error);
-      } else {
-        const fetchedPlots = data.map((plot) => ({
-          id: plot.plot_number,
-          x: plot.coord_lat,
-          y: plot.coord_long,
-          tenant_id: plot.tenant_id,
-        }));
-  
-        setPlotLists((prev) => ({
-          ...prev,
-          [selectedCemetery]: fetchedPlots,
-        }));
-  
-        // If you want to pre-fill plotAssignments for display:
-        const tenantIds = data.map(p => p.tenant_id).filter(Boolean);
-        if (tenantIds.length > 0) {
-          const { data: tenants, error: tenantError } = await supabaseClient
-            .from("person")
-            .select("id, f_name, m_name, l_name, suffix")
-            .in("id", tenantIds);
-  
-          if (tenantError) {
-            console.error("Error fetching tenants:", tenantError);
-          } else {
-            const tenantMap = {};
-            tenants.forEach(p => {
-              const fullName = [p.f_name, p.m_name, p.l_name, p.suffix ? `(${p.suffix})` : ""]
-                .filter(Boolean).join(" ");
-              tenantMap[p.id] = fullName;
-            });
-  
-            const assignments = {};
-            data.forEach(plot => {
-              if (plot.tenant_id) {
-                assignments[`${selectedCemetery}-${plot.plot_number}`] = tenantMap[plot.tenant_id];
-              }
-            });
-            setPlotAssignments(assignments);
-          }
-        }
-      }
-    };
-  
-    fetchPlots();
-  }, [selectedCemetery]);
-
+  // Fetch all people for dropdown options
   useEffect(() => {
     const fetchPeople = async () => {
       const { data, error } = await supabaseClient
@@ -123,12 +65,8 @@ export default function Map() {
             person.suffix ? `(${person.suffix})` : ""
           ].filter(Boolean).join(" ");
 
-          return {
-            value: person.id,
-            label: fullName
-          };
+          return { value: person.id, label: fullName };
         });
-
         setPeopleOptions(options);
       }
     };
@@ -136,13 +74,68 @@ export default function Map() {
     fetchPeople();
   }, []);
 
+  // Clear plot and person on cemetery change
   useEffect(() => {
     setSelectedPlot(null);
     setSelectedPerson(null);
   }, [selectedCemetery]);
 
-  const plots = plotLists[selectedCemetery] || [];
+  // Fetch saved plots and assignments
+  useEffect(() => {
+    const fetchSavedPlots = async () => {
+      if (!selectedCemetery) return;
 
+      const { data, error } = await supabaseClient
+          .from("rr_plot")
+          .select(`
+          plot_number,
+          coord_lat,
+          coord_long,
+          tenant_id,
+          person:tenant_id (
+            id,
+            f_name,
+            m_name,
+            l_name,
+            suffix
+          )
+        `)
+          .eq("ceme_id", selectedCemetery);
+
+      if (error) {
+        console.error("Error fetching saved plots:", error);
+      } else {
+        const savedPlots = [];
+        const assignments = {};
+
+        data.forEach(p => {
+          savedPlots.push({
+            id: p.plot_number,
+            x: p.coord_lat,
+            y: p.coord_long
+          });
+
+          if (p.person) {
+            const name = [p.person.f_name, p.person.m_name, p.person.l_name, p.person.suffix]
+                .filter(Boolean)
+                .join(" ");
+            assignments[`${selectedCemetery}-${p.plot_number}`] = name;
+          }
+        });
+
+        setPlotLists(prev => ({
+          ...prev,
+          [selectedCemetery]: savedPlots
+        }));
+
+        setPlotAssignments(assignments);
+      }
+    };
+
+    fetchSavedPlots();
+  }, [selectedCemetery]);
+
+  const plots = plotLists[selectedCemetery] || [];
 
   const toggleAddingPlot = () => setAddingPlot((prev) => !prev);
 
@@ -169,7 +162,7 @@ export default function Map() {
       y
     };
 
-    setPlotLists((prev) => ({
+    setPlotLists(prev => ({
       ...prev,
       [selectedCemetery]: [...(prev[selectedCemetery] || []), newPlot]
     }));
@@ -231,6 +224,7 @@ export default function Map() {
     }));
     setSelectedPlot(null);
   };
+
   const handleCemeteryChange = (e) => {
     const cemeteryId = e.target.value;
     setSelectedCemetery(cemeteryId);
@@ -244,9 +238,7 @@ export default function Map() {
         <header style={styles.header}>
           <div style={styles.headerLeft}>
             <img src={logoResized} alt="Requiem Registry logo" style={styles.logo} />
-            <h1 className="website-name">
-              {selectedCemeteryName || "Requiem Registry"}
-            </h1>         
+            <h1 className="website-name">{selectedCemeteryName || "Requiem Registry"}</h1>
           </div>
           <div style={styles.control}>
             <select value={selectedCemetery} onChange={handleCemeteryChange} style={styles.dropdown}>
@@ -258,26 +250,24 @@ export default function Map() {
           </div>
         </header>
 
-        <div id="plot-container" onClick={addPlot} style={{ position: 'relative' }}>
+        <div id="plot-container" onClick={addPlot}>
           {cemeteryDetails?.image_url ? (
               <img
                   src={cemeteryDetails.image_url}
                   alt="Cemetery Map"
                   id="map-image"
-                  style={{ display: 'block', maxWidth: '100%' }}
               />
+
           ) : (
               <p style={{ textAlign: "center" }}>Please select a cemetery to view the map.</p>
           )}
 
-          <div
-              id="add-plots-pane"
-              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-          >
+          <div id="add-plots-pane">
             {plots.map((plot) => (
                 <div
                     key={plot.id}
                     className="plot"
+                    title={plotAssignments[`${selectedCemetery}-${plot.id}`] || ""}
                     style={{ left: `${plot.x}px`, top: `${plot.y}px` }}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -297,31 +287,28 @@ export default function Map() {
             </div>
         )}
 
-        <div>
-          <button
-              onClick={toggleAddingPlot}
-              className={addingPlot ? 'active' : ''}
-              disabled={plots.length >= (cemeteryDetails?.capacity || 0)}
-          >
-            {addingPlot ? 'Cancel Adding Plots' : 'Add Plots'}
-          </button>
-        </div>
+        <button
+            onClick={toggleAddingPlot}
+            className={`map-action-button ${addingPlot ? 'cancel' : ''}`}
+            disabled={plots.length >= (cemeteryDetails?.capacity || 0)}
+        >
+          {addingPlot ? 'Cancel Adding Plots' : 'Add Plots'}
+        </button>
 
         {selectedPlot && (
             <div
                 id="info-popup"
-                style={{
-                  position: 'absolute',
-                  left: `${popupPosition.x}px`,
-                  top: `${popupPosition.y}px`,
-                  background: "white",
-                  padding: "10px",
-                  border: "1px solid black"
-                }}
+                style={{ left: `${popupPosition.x}px`, top: `${popupPosition.y}px` }}
             >
+              <button
+                  className="close-button"
+                  onClick={() => setSelectedPlot(null)}
+                  aria-label="Close"
+              >
+                ×
+              </button>
               <h3>Assign Person to Plot {selectedPlot.id}</h3>
 
-              {/* Show Assigned Person */}
               {plotAssignments[`${selectedCemetery}-${selectedPlot.id}`] && (
                   <p><strong>Assigned:</strong> {plotAssignments[`${selectedCemetery}-${selectedPlot.id}`]}</p>
               )}
@@ -334,10 +321,20 @@ export default function Map() {
                   isClearable
               />
 
-              <div style={{ marginTop: "10px" }}>
-                <button onClick={assignPersonToPlot} disabled={!selectedPerson}>Assign</button>
-                <button onClick={deletePlot} style={{ marginLeft: "10px" }}>Delete</button>
-                <button onClick={() => setSelectedPlot(null)} style={{ marginLeft: "10px" }}>Close</button>
+              <div className="popup-button-group">
+                <button
+                    onClick={assignPersonToPlot}
+                    disabled={!selectedPerson}
+                    className="popup-button assign"
+                >
+                  Assign
+                </button>
+                <button
+                    onClick={deletePlot}
+                    className="popup-button delete"
+                >
+                  Delete
+                </button>
               </div>
             </div>
         )}
@@ -377,5 +374,5 @@ const styles = {
     fontSize: "16px",
     borderRadius: "5px",
     border: "1px solid #ccc",
-  }
+  },
 };
