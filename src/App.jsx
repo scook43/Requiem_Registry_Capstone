@@ -10,6 +10,7 @@ import PlotList from "./plot/PlotList";
 import CemeteryDetail from "./cemetery/CemeteryDetails";
 import Map from "./map/Map";
 import PersonDetail from "./person/PersonDetails";
+import UserMap from "./map/UserMap";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false to test public view
@@ -23,6 +24,7 @@ function App() {
                         {/* Public routes */}
                         <Route path="/" element={<HomePage />} />
                         <Route path="/person/:id" element={<PersonDetail />} />
+                        <Route path="/map/UserMap"element={<UserMap />} />
 
                         {/* Protected admin routes */}
                         {isLoggedIn && (

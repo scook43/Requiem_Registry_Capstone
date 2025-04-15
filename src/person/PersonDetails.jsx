@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import supabaseClient from "../helper/supabaseClient";
-import "../resources/css/PersonDetails.css"; // or whatever your path/filename is
-
+import "../resources/css/PersonDetails.css";
 
 function PersonDetail() {
     const { id } = useParams();
@@ -71,8 +70,7 @@ function PersonDetail() {
                 ← Back
             </button>
 
-
-            {isEditing ? (
+            {isEditing && !isReadOnly ? (
                 <div style={styles.form}>
                     <input
                         type="text"

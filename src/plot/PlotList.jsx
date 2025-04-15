@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import supabaseClient from "../helper/supabaseClient";
 import PlotRow from "./PlotRow";
-import "./PlotsList.css";
+import "../resources/css/PlotsList.css";
 
 function PlotsList() {
     const [plots, setPlots] = useState([]);

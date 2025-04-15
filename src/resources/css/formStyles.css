@@ -1,10 +1,10 @@
-/* General styling for the form containers */
+/* General container styling */
 .add-cemetery-container,
 .add-person-container {
     max-width: 500px;
     margin: 50px auto;
     padding: 20px;
-    background: #e0e0e0; /* Lighter gray for contrast */
+    background: #e0e0e0;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -12,7 +12,7 @@
     align-items: center;
 }
 
-/* Title Styling */
+/* Title styling */
 .add-cemetery-container h1,
 .add-person-container h1 {
     text-align: center;
@@ -20,31 +20,38 @@
     margin-bottom: 20px;
 }
 
-/* Form Styling */
-.add-cemetery-container form,
-.add-person-container form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* Form element layout */
+.add-cemetery-container label,
+.add-person-container label {
+    align-self: flex-start;        /* Aligns label to the left */
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
 }
 
-/* Input and textarea styling */
 .add-cemetery-container input,
 .add-cemetery-container textarea,
 .add-person-container input,
 .add-person-container textarea {
-    width: 90%; /* Keeps fields from stretching too far */
-    max-width: 400px; /* Prevents fields from being too wide */
+    width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     border: 1px solid #bbb;
     border-radius: 5px;
     font-size: 16px;
     background: #f0f0f0;
+    box-sizing: border-box;
 }
 
-/* Textarea adjustments */
+/* File input */
+.add-cemetery-container input[type="file"],
+.add-person-container input[type="file"] {
+    padding: 6px;
+    background: white;
+}
+
+/* Textarea specifics */
 .add-cemetery-container textarea,
 .add-person-container textarea {
     height: 80px;
@@ -54,12 +61,12 @@
 /* Button styling */
 .add-cemetery-container button,
 .add-person-container button {
-    width: 90%;
-    max-width: 400px;
+    width: 100%;
     padding: 12px;
-    background-color: #555; /* Neutral gray */
+    background-color: #4CAF50;
     color: white;
     font-size: 18px;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -68,5 +75,5 @@
 
 .add-cemetery-container button:hover,
 .add-person-container button:hover {
-    background-color: #444; /* Darker gray for hover */
+    background-color: #45a049;
 }

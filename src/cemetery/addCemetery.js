@@ -10,8 +10,7 @@ function AddCemetery() {
     const [capacity, setCapacity] = useState(0);
     const [email, setEmail] = useState("");
     const [imageFile, setImageFile] = useState(null);
-
-    const [previewUrl, setPreviewUrl] = useState(null); // For image preview
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     async function addCemetery() {
         if (!name.trim()) {
@@ -21,7 +20,6 @@ function AddCemetery() {
 
         let imageUrl = null;
 
-        // Upload image if present
         if (imageFile) {
             const fileExt = imageFile.name.split(".").pop();
             const fileName = `${Date.now()}.${fileExt}`;
@@ -58,7 +56,6 @@ function AddCemetery() {
         if (data) {
             console.log("Inserted cemetery:", data);
             alert("Cemetery added successfully!");
-            // Optionally reset form
         }
     }
 
@@ -87,43 +84,64 @@ function AddCemetery() {
     return (
         <div className="add-cemetery-container">
             <h1>Add Cemetery</h1>
+
+            <label htmlFor="cemetery-name">Cemetery Name</label>
             <input
+                id="cemetery-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Name"
             />
+
+            <label htmlFor="cemetery-description">Description</label>
             <textarea
+                id="cemetery-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
             />
+
+            <label htmlFor="cemetery-address">Address</label>
             <textarea
+                id="cemetery-address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Address"
             />
+
+            <label htmlFor="cemetery-phone">Phone Number</label>
             <input
+                id="cemetery-phone"
                 value={phone_number}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Phone Number"
             />
+
+            <label htmlFor="cemetery-capacity">Capacity</label>
             <input
+                id="cemetery-capacity"
                 type="number"
                 value={capacity}
-                onChange={(e) => setCapacity(e.target.value)}
+                onChange={(e) => setCapacity(Number(e.target.value))}
                 placeholder="Capacity"
             />
+
+            <label htmlFor="cemetery-email">Email</label>
             <input
+                id="cemetery-email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
             />
 
+            <label htmlFor="cemetery-image">Upload Cemetery Image (PNG, 500x500px)</label>
             <input
+                id="cemetery-image"
                 type="file"
                 accept="image/png"
                 onChange={handleImageChange}
             />
+
             {previewUrl && (
                 <div style={{ marginTop: "10px" }}>
                     <img
