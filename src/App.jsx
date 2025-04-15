@@ -11,14 +11,37 @@ import CemeteryDetail from "./cemetery/CemeteryDetails";
 import Map from "./map/Map";
 import PersonDetail from "./person/PersonDetails";
 import UserMap from "./map/UserMap";
+import Signin from "./signin/signin";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false to test public view
+
+    const [userProfile, setUserProfile] = useState(null);
+    const isLoggedIn = !!userProfile;
+
+    useEffect(() => {
+        const savedProfile = localStorage.getItem("googleUser");
+        if (savedProfile) {
+            setUserProfile(JSON.parse(savedProfile));
+        }
+    }, []);
 
     return (
         <Router>
             <div style={styles.container}>
                 <Navbar isLoggedIn={isLoggedIn} />
+
+
+                {/* Signin top right */}
+                <div style={styles.loginBox}>
+                    <Signin
+                        onLogin={(profile) => setUserProfile(profile)}
+                        onLogout={() => setUserProfile(null)}
+                    />
+                </div>
+
+
+
                 <div style={styles.content}>
                     <Routes>
                         {/* Public routes */}
@@ -54,6 +77,12 @@ const styles = {
         padding: "20px",
         flexGrow: 1,
     },
+    loginBox: {
+        position: "absolute",
+        top: 10,
+        right: 20,
+        zIndex: 1000
+    }
 };
 
 export default App;
