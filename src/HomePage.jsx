@@ -2,6 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import supabaseClient from "./helper/supabaseClient.js";
 import PersonCard from "./person/PersonCard";
 import logoResized from "./resources/pngs/logoCircle.png";
+import { Link } from "react-router-dom";
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
+import Signin from './signin/signin';
+//import logo from '../resources/pngs/logoCircle.png';
+
+
 
 function HomePage() {
     const [cemeteries, setCemeteries] = useState([]);
@@ -9,6 +16,7 @@ function HomePage() {
     const [cemeteryDetails, setCemeteryDetails] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    
 
     useEffect(() => {
         const fetchCemeteries = async () => {
@@ -92,11 +100,15 @@ function HomePage() {
 
     return (
         <div>
+
+           
+            
             {/* Header Bar */}
             <header style={styles.header}>
                 <div style={styles.headerLeft}>
                     <img src={logoResized} alt="Requiem Registry logo" style={styles.logo} />
                     <h1 style={styles.websiteName}>Requiem Registry</h1>
+                   
                 </div>
 
                 {/* Cemetery Dropdown */}
@@ -114,7 +126,11 @@ function HomePage() {
                         ))}
                     </select>
                 </div>
+
+           
             </header>
+
+           
 
             {/* Cemetery Details */}
             {cemeteryDetails && (

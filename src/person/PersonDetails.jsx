@@ -67,8 +67,8 @@ function PersonDetail() {
 
     return (
         <div style={styles.container}>
-            <button onClick={() => navigate("/people-list")} className="person-detail-btn cancel-btn">
-                ← Back to List
+            <button onClick={() => navigate("/")} className="person-detail-btn cancel-btn">
+                ← Back to Homepage
             </button>
 
 
