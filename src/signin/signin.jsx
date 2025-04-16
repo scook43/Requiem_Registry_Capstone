@@ -13,7 +13,10 @@ const Signin = ({ onLogin, onLogout }) => {
     const navigate = useNavigate();
 
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
+        onSuccess: (codeResponse) => {
+            setUser(codeResponse);
+            navigate("/"); // Redirect after successful login
+        },
         onError: (error) => {
             console.log('Login Failed:', error);
             setError("Google login failed. Please try again.");
@@ -27,6 +30,7 @@ const Signin = ({ onLogin, onLogout }) => {
             if (parsed.email === ALLOWED_EMAIL) {
                 setProfile(parsed);
                 onLogin && onLogin(parsed);
+                navigate("/");
             } else {
                 localStorage.removeItem("googleUser");
             }
@@ -63,7 +67,7 @@ const Signin = ({ onLogin, onLogout }) => {
         setProfile(null);
         localStorage.removeItem("googleUser");
         onLogout && onLogout();
-        navigate("/");  //redirection to homepage
+        navigate("/"); // Redirect after successful login
     };
 
 

@@ -20,19 +20,6 @@ function PlotRow({ plot, deletePlot, peopleOptions, onAssign }) {
         }
     };
 
-    const fullName = plot.person
-        ? [plot.person.f_name, plot.person.m_name, plot.person.l_name, plot.person.suffix]
-            .filter(Boolean)
-            .join(" ")
-        : "Unassigned";
-
-    const handleSave = () => {
-        if (selectedPerson) {
-            onAssign(plot.plot_id, selectedPerson.value);
-            setIsEditing(false);
-        }
-    };
-
     return (
         <tr style={!hasTenant ? { backgroundColor: "#f8f8f8" } : {}}>
             <td>{plot.plot_id}</td>

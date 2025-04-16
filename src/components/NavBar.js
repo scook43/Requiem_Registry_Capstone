@@ -15,8 +15,9 @@ function Navbar({ isLoggedIn }) {
             <Link to="/" style={styles.logoLink}>
                 <img src={logo} alt="Logo" style={styles.logo} />
             </Link>
+            {!isLoggedIn && (
             <Link to="/map/UserMap" style={styles.link}>Map</Link>
-
+            )}
 
             {isLoggedIn && (
                 <div style={styles.links}>

@@ -100,15 +100,11 @@ function HomePage() {
 
     return (
         <div>
-
-           
-            
             {/* Header Bar */}
             <header style={styles.header}>
                 <div style={styles.headerLeft}>
                     <img src={logoResized} alt="Requiem Registry logo" style={styles.logo} />
-                    <h1 style={styles.websiteName}>Requiem Registry</h1>
-                   
+                    <h1 className="website-name">Requiem Registry</h1>
                 </div>
 
                 {/* Cemetery Dropdown */}
@@ -126,11 +122,7 @@ function HomePage() {
                         ))}
                     </select>
                 </div>
-
-           
             </header>
-
-           
 
             {/* Cemetery Details */}
             {cemeteryDetails && (
@@ -166,6 +158,7 @@ function HomePage() {
             </div>
         </div>
     );
+
 }
 
 const styles = {
@@ -177,6 +170,7 @@ const styles = {
         backgroundColor: "#333",
         color: "white",
     },
+
     headerLeft: {
         display: "flex",
         alignItems: "center",

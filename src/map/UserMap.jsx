@@ -9,14 +9,14 @@ export default function UserMap() {
     const [cemeteryDetails, setCemeteryDetails] = useState(null);
     const [plotLists, setPlotLists] = useState({});
     const [selectedPlot, setSelectedPlot] = useState(null);
-    const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+    const [popupPosition, setPopupPosition] = useState({x: 0, y: 0});
     const [plotAssignments, setPlotAssignments] = useState({});
     const [selectedCemetery, setSelectedCemetery] = useState("");
     const [selectedCemeteryName, setSelectedCemeteryName] = useState("Requiem Registry");
 
     useEffect(() => {
         const fetchCemeteries = async () => {
-            const { data, error } = await supabaseClient.from("cemetery").select("id, name");
+            const {data, error} = await supabaseClient.from("cemetery").select("id, name");
             if (error) console.error("Error fetching cemeteries:", error);
             else setCemeteries(data);
         };
@@ -26,7 +26,7 @@ export default function UserMap() {
     useEffect(() => {
         const fetchCemeteryDetails = async () => {
             if (selectedCemetery) {
-                const { data, error } = await supabaseClient
+                const {data, error} = await supabaseClient
                     .from("cemetery")
                     .select("*")
                     .eq("id", selectedCemetery)
@@ -44,7 +44,7 @@ export default function UserMap() {
         const fetchSavedPlots = async () => {
             if (!selectedCemetery) return;
 
-            const { data, error } = await supabaseClient
+            const {data, error} = await supabaseClient
                 .from("rr_plot")
                 .select(`
           plot_number,
@@ -108,59 +108,94 @@ export default function UserMap() {
 
     return (
         <div className="map-container">
+            {/* Header with logo and cemetery selection */}
             <header style={styles.header}>
                 <div style={styles.headerLeft}>
-                    <img src={logoResized} alt="Requiem Registry logo" style={styles.logo} />
+                    <img src={logoResized} alt="Requiem Registry logo" style={styles.logo}/>
                     <h1 className="website-name">{selectedCemeteryName || "Requiem Registry"}</h1>
                 </div>
                 <div style={styles.control}>
-                    <select value={selectedCemetery} onChange={handleCemeteryChange} style={styles.dropdown}>
+                    <select
+                        value={selectedCemetery}
+                        onChange={handleCemeteryChange}
+                        style={styles.dropdown}
+                    >
                         <option value="">Select a cemetery</option>
-                        {cemeteries.map(c => (
-                            <option key={c.id} value={c.id}>{c.name}</option>
+                        {cemeteries.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.name}
+                            </option>
                         ))}
                     </select>
                 </div>
             </header>
 
-            <div id="plot-container">
-                {cemeteryDetails?.image_url ? (
-                    <img src={cemeteryDetails.image_url} alt="Cemetery Map" id="map-image" />
-                ) : (
-                    <p style={{ textAlign: "center" }}>Please select a cemetery to view the map.</p>
-                )}
+            {/* Main content layout */}
+            <div style={styles.mainContent}>
+                {/* Map Section */}
+                <div style={styles.mapSection}>
+                    {cemeteryDetails?.image_url ? (
+                        <img
+                            src={cemeteryDetails.image_url}
+                            alt="Cemetery Map"
+                            style={styles.mapImage}
+                        />
+                    ) : (
+                        <p style={{textAlign: "center"}}>
+                            Please select a cemetery to view the map.
+                        </p>
+                    )}
 
-                <div id="add-plots-pane">
-                    {plots.map((plot) => (
-                        <div
-                            key={plot.id}
-                            className="plot"
-                            title={plotAssignments[`${selectedCemetery}-${plot.id}`]?.name || ""}
-                            style={{ left: `${plot.x}px`, top: `${plot.y}px` }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedPlot(plot);
-                                setPopupPosition({ x: plot.x + 20, y: plot.y + 20 });
-                            }}
-                        >
-                            {plot.id}
+                    <div id="add-plots-pane">
+                        {plots.map((plot) => (
+                            <div
+                                key={plot.id}
+                                className="plot"
+                                title={plotAssignments[`${selectedCemetery}-${plot.id}`]?.name || ""}
+                                style={{left: `${plot.x}px`, top: `${plot.y}px`}}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedPlot(plot);
+                                    setPopupPosition({x: plot.x + 20, y: plot.y + 20});
+                                }}
+                            >
+                                {plot.id}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Sidebar: Cemetery Details */}
+                <div style={styles.sidebar}>
+                    {cemeteryDetails && (
+                        <div style={styles.cemeteryDetails}>
+                            <h2>{cemeteryDetails.name}</h2>
+                            <p><strong>Description:</strong> {cemeteryDetails.description}</p>
+                            <p><strong>Address:</strong> {cemeteryDetails.address}</p>
+                            <p><strong>Phone:</strong> {cemeteryDetails.phone_number}</p>
+                            <p><strong>Email:</strong> {cemeteryDetails.email}</p>
+                            <p style={{marginTop: "10px"}}>
+                                <strong>{plots.length}</strong> of{" "}
+                                <strong>{cemeteryDetails.capacity}</strong> plots placed
+                            </p>
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
 
-            {cemeteryDetails && (
-                <div style={{ textAlign: "center", marginTop: "10px" }}>
-                    {plots.length} of {cemeteryDetails.capacity} plots placed
-                </div>
-            )}
-
+            {/* Popup for Plot Info */}
             {selectedPlot && (
                 <div
                     id="info-popup"
-                    style={{ left: `${popupPosition.x}px`, top: `${popupPosition.y}px` }}
+                    style={{left: `${popupPosition.x}px`, top: `${popupPosition.y}px`}}
                 >
-                    <button className="close-button" onClick={() => setSelectedPlot(null)} aria-label="Close">×</button>
+                    <button
+                        className="close-button"
+                        onClick={() => setSelectedPlot(null)}
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
                     <h3>Plot {selectedPlot.id}</h3>
 
                     {plotAssignments[`${selectedCemetery}-${selectedPlot.id}`] ? (
@@ -168,7 +203,7 @@ export default function UserMap() {
                             <strong>Assigned to:</strong>{" "}
                             <Link
                                 to={`/person/${plotAssignments[`${selectedCemetery}-${selectedPlot.id}`].id}?view=readonly`}
-                                style={{ textDecoration: "underline", color: "#0077cc" }}
+                                style={{textDecoration: "underline", color: "#0077cc"}}
                             >
                                 {plotAssignments[`${selectedCemetery}-${selectedPlot.id}`].name}
                             </Link>
@@ -180,9 +215,8 @@ export default function UserMap() {
             )}
         </div>
     );
-}
-
-const styles = {
+};
+    const styles = {
     header: {
         display: "flex",
         alignItems: "center",
@@ -211,4 +245,35 @@ const styles = {
         borderRadius: "5px",
         border: "1px solid #ccc",
     },
+    mainContent: {
+        display: "flex",
+        padding: "20px",
+        gap: "30px",
+    },
+    mapSection: {
+        position: "relative",
+        width: "500px",
+        height: "500px",
+        border: "1px solid #ccc",
+        borderRadius: "10px",
+        overflow: "hidden",
+    },
+    mapImage: {
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+    },
+    sidebar: {
+        flex: 1,
+        padding: "20px",
+        border: "1px solid #ccc",
+        borderRadius: "10px",
+        backgroundColor: "#f9f9f9",
+    },
+    cemeteryDetails: {
+        fontSize: "16px",
+        lineHeight: "1.5",
+    },
+
 };
+

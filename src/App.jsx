@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PeopleList from "./person/PeopleList";
 import AddPerson from "./person/AddPerson";
@@ -14,7 +14,6 @@ import UserMap from "./map/UserMap";
 import Signin from "./signin/signin";
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false to test public view
 
     const [userProfile, setUserProfile] = useState(null);
     const isLoggedIn = !!userProfile;
@@ -47,11 +46,16 @@ function App() {
                         {/* Public routes */}
                         <Route path="/" element={<HomePage />} />
                         <Route path="/person/:id" element={<PersonDetail />} />
+                        {!isLoggedIn && (
                         <Route path="/map/UserMap"element={<UserMap />} />
-
+                        )}
                         {/* Protected admin routes */}
                         {isLoggedIn && (
                             <>
+                                <Route
+                                    path="/map"
+                                    element={isLoggedIn ? <Map /> : <UserMap />}
+                                />
                                 <Route path="/add-person" element={<AddPerson />} />
                                 <Route path="/add-cemetery" element={<AddCemetery />} />
                                 <Route path="/people-list" element={<PeopleList />} />
@@ -67,14 +71,13 @@ function App() {
         </Router>
     );
 }
-
 const styles = {
     container: {
         display: "flex",
     },
     content: {
         marginLeft: "200px",
-        padding: "20px",
+        padding: "60px 20px 20px",
         flexGrow: 1,
     },
     loginBox: {
@@ -82,7 +85,39 @@ const styles = {
         top: 10,
         right: 20,
         zIndex: 1000
+    },
+
+    button: {
+        padding: '10px 20px',
+        backgroundColor: '#4285F4',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '16px'
+    },
+    logoutButton: {
+        padding: '10px 20px',
+        backgroundColor: '#DB4437',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
+        fontSize: '16px',
+        marginLeft: '10px'
+    },
+    loggedInContainer: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    welcome: {
+        color: 'black',
+        fontSize: '16px',
+        fontWeight: 'bold'
+    },
+    error: {
+        color: 'red',
+        marginTop: '0px'
     }
 };
-
 export default App;
