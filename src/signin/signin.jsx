@@ -81,7 +81,7 @@ const Signin = ({ onLogin, onLogout }) => {
             ) : (
                 <div>
                 <button onClick={login} style={styles.button}>
-                    Sign in with Google 🚀
+                    Sign in with Google
                 </button>
                 {error && <p style={styles.error}>{error}</p>}
                 </div>

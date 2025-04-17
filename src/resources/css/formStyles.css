@@ -35,8 +35,8 @@
 .add-person-container input,
 .add-person-container textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 16px;
+    padding: 7px;
+    margin-bottom: 8px;
     border: 1px solid #bbb;
     border-radius: 5px;
     font-size: 16px;
@@ -54,7 +54,7 @@
 /* Textarea specifics */
 .add-cemetery-container textarea,
 .add-person-container textarea {
-    height: 80px;
+    height: 60px;
     resize: vertical;
 }
 
@@ -62,7 +62,7 @@
 .add-cemetery-container button,
 .add-person-container button {
     width: 100%;
-    padding: 12px;
+    padding: 8px;
     background-color: #4CAF50;
     color: white;
     font-size: 18px;
