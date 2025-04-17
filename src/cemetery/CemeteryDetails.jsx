@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import supabaseClient from "../helper/supabaseClient";
 
 function CemeteryDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    // Determine if navigation came from HomePage
+    const fromHome = location.state && location.state.fromHome;
 
     const [cemetery, setCemetery] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -55,6 +58,8 @@ function CemeteryDetail() {
             alert("There was an error deleting the cemetery.");
             setIsDeleting(false);
         } else {
+            // Redirect to an appropriate page after deletion.
+            // For instance, if the deletion happened from cemetery list, navigate there.
             navigate("/cemetery-list");
         }
     }
@@ -63,11 +68,18 @@ function CemeteryDetail() {
 
     return (
         <div style={styles.container}>
-            <button onClick={() => navigate("/cemetery-list")} className="person-detail-btn cancel-btn">
-                ← Back to List
-            </button>
+            {/* Adjust your back button depending on where the user came from */}
+            {fromHome ? (
+                <button onClick={() => navigate("/")} className="person-detail-btn cancel-btn">
+                    ← Back to Home
+                </button>
+            ) : (
+                <button onClick={() => navigate("/cemetery-list")} className="person-detail-btn cancel-btn">
+                    ← Back to List
+                </button>
+            )}
 
-            {isEditing ? (
+            {(!fromHome && isEditing) ? (
                 <div style={styles.form}>
                     <input
                         type="text"
@@ -120,12 +132,15 @@ function CemeteryDetail() {
                     <p><strong>Email:</strong> {cemetery.email}</p>
                     <p><strong>Capacity:</strong> {cemetery.capacity}</p>
 
-                    <div style={styles.buttonGroup}>
-                        <button onClick={() => setIsEditing(true)} className="person-detail-btn edit-btn">Edit</button>
-                        <button onClick={handleDelete} disabled={isDeleting} className="person-detail-btn delete-btn">
-                            {isDeleting ? "Deleting..." : "Delete"}
-                        </button>
-                    </div>
+                    {/* Only show editing/deleting when not coming from HomePage */}
+                    {!fromHome && (
+                        <div style={styles.buttonGroup}>
+                            <button onClick={() => setIsEditing(true)} className="person-detail-btn edit-btn">Edit</button>
+                            <button onClick={handleDelete} disabled={isDeleting} className="person-detail-btn delete-btn">
+                                {isDeleting ? "Deleting..." : "Delete"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

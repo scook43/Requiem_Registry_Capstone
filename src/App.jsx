@@ -46,6 +46,8 @@ function App() {
                         {/* Public routes */}
                         <Route path="/" element={<HomePage />} />
                         <Route path="/person/:id" element={<PersonDetail />} />
+                        <Route path="/cemetery/:id" element={<CemeteryDetail />} />
+
                         {!isLoggedIn && (
                         <Route path="/map/UserMap"element={<UserMap />} />
                         )}
@@ -62,7 +64,6 @@ function App() {
                                 <Route path="/cemetery-list" element={<CemeteryList />} />
                                 <Route path="/map" element={<Map />} />
                                 <Route path="/plot-list" element={<PlotList />} />
-                                <Route path="/cemetery/:id" element={<CemeteryDetail />} />
                             </>
                         )}
                     </Routes>

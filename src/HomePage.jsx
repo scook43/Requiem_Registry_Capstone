@@ -127,7 +127,16 @@ function HomePage() {
             {/* Cemetery Details */}
             {cemeteryDetails && (
                 <div style={styles.cemeteryDetails}>
-                    <h2>{cemeteryDetails.name}</h2>
+                    <h2>
+                    <Link
+                        to={`/cemetery/${cemeteryDetails.id}`}
+                        state={{ fromHome: true }}  // Pass flag indicating navigation came from HomePage
+                        style={styles.cemeteryLink}
+                    >
+                        {cemeteryDetails.name}
+                    </Link>
+                </h2>
+
                     <p><strong>Description:</strong> {cemeteryDetails.description}</p>
                     <p><strong>Address:</strong> {cemeteryDetails.address}</p>
                     <p><strong>Phone:</strong> {cemeteryDetails.phone_number}</p>
@@ -218,6 +227,11 @@ const styles = {
     resultsWrapper: {
         padding: "20px",
     },
+    cemeteryLink: {
+        color: "black",
+        textDecoration: "underline",
+        fontWeight: "bold"
+    }
 };
 
 export default HomePage;
